@@ -27,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.Manifest;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
@@ -187,14 +188,23 @@ public class CordovaGPSLocation extends CordovaPlugin {
 			e.printStackTrace();
 			maximumAge = 0;
 		}
-		Location last = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		// Check if we can use lastKnownLocation to get a quick reading and use
-		// less battery
-		if (last != null && (System.currentTimeMillis() - last.getTime()) <= maximumAge) {
-			PluginResult result = new PluginResult(PluginResult.Status.OK, returnLocationJSON(last));
-			callbackContext.sendPluginResult(result);
-		} else {
-			getCurrentLocation(callbackContext, Integer.MAX_VALUE);
+
+		try {
+			cordova.getActivity().requestPermissions(new String[] {
+					Manifest.permission.ACCESS_FINE_LOCATION,
+					Manifest.permission.ACCESS_COARSE_LOCATION }, 1);
+
+			Location last = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			// Check if we can use lastKnownLocation to get a quick reading and use
+			// less battery
+			if (last != null && (System.currentTimeMillis() - last.getTime()) <= maximumAge) {
+				PluginResult result = new PluginResult(PluginResult.Status.OK, returnLocationJSON(last));
+				callbackContext.sendPluginResult(result);
+			} else {
+				getCurrentLocation(callbackContext, Integer.MAX_VALUE);
+			}
+		} catch(SecurityException e) {
+			fail(1, e.getMessage(), callbackContext, true);
 		}
 	}
 
