@@ -36,6 +36,8 @@ public class CordovaLocationListener implements LocationListener {
 	public static int PERMISSION_DENIED = 1;
 	public static int POSITION_UNAVAILABLE = 2;
 	public static int TIMEOUT = 3;
+	public static int ERR_START = 4;
+	public static int ERR_STOP = 5;
 
 	public HashMap<String, CallbackContext> watches = new HashMap<String, CallbackContext>();
 
@@ -142,7 +144,7 @@ public class CordovaLocationListener implements LocationListener {
 		try {
 			mOwner.getLocationManager().requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 		} catch(SecurityException e) {
-			fail(2, e.getMessage());
+			fail(ERR_START, e.getMessage());
 		}
 
 	}
@@ -152,7 +154,7 @@ public class CordovaLocationListener implements LocationListener {
 		try {
 			mOwner.getLocationManager().removeUpdates(this);
 		} catch(SecurityException e) {
-			fail(3, e.getMessage());
+			fail(ERR_STOP, e.getMessage());
 		}
 	}
 

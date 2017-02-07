@@ -204,7 +204,7 @@ public class CordovaGPSLocation extends CordovaPlugin {
 				getCurrentLocation(callbackContext, Integer.MAX_VALUE);
 			}
 		} catch(SecurityException e) {
-			fail(1, e.getMessage(), callbackContext, true);
+			fail(6, e.getMessage(), callbackContext, true);
 		}
 	}
 
