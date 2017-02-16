@@ -29,8 +29,10 @@ import org.json.JSONObject;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 
 /*
  * This class is the interface to the Geolocation.  It's bound to the geo object.
@@ -40,6 +42,8 @@ public class CordovaGPSLocation extends CordovaPlugin {
 
 	private CordovaLocationListener mListener;
 	private LocationManager mLocationManager;
+
+    private final int GPS_PERMISSION_CODE = 1;
 
 	LocationManager getLocationManager() {
 		return mLocationManager;
@@ -81,6 +85,11 @@ public class CordovaGPSLocation extends CordovaPlugin {
 			fail(CordovaLocationListener.POSITION_UNAVAILABLE, "GPS is disabled on this device.", callbackContext, false);
 			return true;
 		}
+
+        if(!hasGpsPermission()) {
+            fail(CordovaLocationListener.POSITION_UNAVAILABLE, "Permission Denied", callbackContext, false);
+            return true;
+        }
 
 		if (action.equals("getLocation")) {
 			getLastLocation(args, callbackContext);
@@ -167,6 +176,10 @@ public class CordovaGPSLocation extends CordovaPlugin {
 		callbackContext.sendPluginResult(result);
 	}
 
+    private boolean hasGpsPermission() {
+        return this.cordova.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+    }
+
 	private boolean isGPSdisabled() {
 		boolean gps_enabled;
 		try {
@@ -179,6 +192,9 @@ public class CordovaGPSLocation extends CordovaPlugin {
 		return !gps_enabled;
 	}
 
+    private boolean isApi23OrGreater() {
+        return Build.VERSION.SDK_INT >= 23;
+    }
 
 	private void getLastLocation(JSONArray args, CallbackContext callbackContext) {
 		int maximumAge;
