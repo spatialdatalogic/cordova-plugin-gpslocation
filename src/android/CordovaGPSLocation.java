@@ -42,6 +42,7 @@ public class CordovaGPSLocation extends CordovaPlugin {
 
 	private CordovaLocationListener mListener;
 	private LocationManager mLocationManager;
+	private CordovaInterface mCordova;
 
     private final int GPS_PERMISSION_CODE = 1;
 
@@ -52,6 +53,7 @@ public class CordovaGPSLocation extends CordovaPlugin {
 	@Override
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
+		mCordova = cordova;
 		mLocationManager = (LocationManager) cordova.getActivity().getSystemService(Context.LOCATION_SERVICE);
 		
 	}
@@ -91,7 +93,7 @@ public class CordovaGPSLocation extends CordovaPlugin {
 		    fail(CordovaLocationListener.POSITION_UNAVAILABLE, "Permission Denied", callbackContext, false);
 		    return true;
 		}
-		runOnUiThread(new Runnable() {
+		mCordova.getActivity().runOnUiThread(new Runnable() {
 		    public void run() 
 		    {
 			if (action.equals("getLocation")) {
