@@ -42,6 +42,7 @@ public class CordovaLocationListener implements LocationListener {
 	public HashMap<String, CallbackContext> watches = new HashMap<String, CallbackContext>();
 
 	protected boolean mIsRunning = false;
+	private String mProvider = "";
 
 	private CordovaGPSLocation mOwner;
 	private List<CallbackContext> mCallbacks = new ArrayList<CallbackContext>();
@@ -78,10 +79,11 @@ public class CordovaLocationListener implements LocationListener {
 		}
 	}
 
-	public void addCallback(CallbackContext callbackContext, int timeout) {
+	public void addCallback(CallbackContext callbackContext, int timeout, String provider) {
 		if (mTimer == null) {
 			mTimer = new Timer();
 		}
+		mProvider = provider;
 
 		mTimer.schedule(new LocationTimeoutTask(callbackContext, this), timeout);
 		mCallbacks.add(callbackContext);
@@ -142,7 +144,8 @@ public class CordovaLocationListener implements LocationListener {
 
 	private void start() {
 		try {
-			mOwner.getLocationManager().requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+			//LocationManager.GPS_PROVIDER
+			mOwner.getLocationManager().requestLocationUpdates(mProvider, 0, 0, this);
 		} catch(SecurityException e) {
 			fail(ERR_START, e.getMessage());
 		}
