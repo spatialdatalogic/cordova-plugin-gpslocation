@@ -53,7 +53,7 @@ public class CordovaGPSLocation extends CordovaPlugin {
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
 		mLocationManager = (LocationManager) cordova.getActivity().getSystemService(Context.LOCATION_SERVICE);
-		getListener();
+		
 	}
 
 	/**
@@ -87,17 +87,20 @@ public class CordovaGPSLocation extends CordovaPlugin {
 			return true;
 		}
 
-        if(!hasGpsPermission()) {
-            fail(CordovaLocationListener.POSITION_UNAVAILABLE, "Permission Denied", callbackContext, false);
-            return true;
-        }
-
-		if (action.equals("getLocation")) {
-			getLastLocation(args, callbackContext);
-		} else if (action.equals("addWatch")) {
-			addWatch(id, callbackContext);
+		if(!hasGpsPermission()) {
+		    fail(CordovaLocationListener.POSITION_UNAVAILABLE, "Permission Denied", callbackContext, false);
+		    return true;
 		}
-
+		runOnUiThread(new Runnable() {
+		    public void run() 
+		    {
+			if (action.equals("getLocation")) {
+				getLastLocation(args, callbackContext);
+			} else if (action.equals("addWatch")) {
+				addWatch(id, callbackContext);
+			}
+		    }
+		});
 		return true;
 	}
 
