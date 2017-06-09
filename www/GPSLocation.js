@@ -32,6 +32,7 @@ function parseParameters(options) {
 	var opt = {
 		maximumAge: 0,
 		timeout: Infinity,
+		provider: options.provider
 	};
 
 	if (options) {
