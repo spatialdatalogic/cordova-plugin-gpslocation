@@ -229,7 +229,7 @@ public class CordovaGPSLocation extends CordovaPlugin {
 				PluginResult result = new PluginResult(PluginResult.Status.OK, returnLocationJSON(last));
 				callbackContext.sendPluginResult(result);
 			} else {
-				getCurrentLocation(callbackContext, Integer.MAX_VALUE);
+				getCurrentLocation(callbackContext, Integer.MAX_VALUE, provider);
 			}
 		} catch(SecurityException e) {
 			fail(6, e.getMessage(), callbackContext, true);
@@ -240,8 +240,8 @@ public class CordovaGPSLocation extends CordovaPlugin {
 		getListener().clearWatch(id);
 	}
 
-	private void getCurrentLocation(CallbackContext callbackContext, int timeout) {
-		getListener().addCallback(callbackContext, timeout);
+	private void getCurrentLocation(CallbackContext callbackContext, int timeout, String provider) {
+		getListener().addCallback(callbackContext, timeout, provider);
 	}
 
 	private void addWatch(String timerId, CallbackContext callbackContext) {
