@@ -33,6 +33,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.util.Log;
 
 /*
  * This class is the interface to the Geolocation.  It's bound to the geo object.
@@ -80,6 +81,8 @@ public class CordovaGPSLocation extends CordovaPlugin {
 
 		final String id = args.optString(0, "");
 		mProvider = args.optString(1,"");
+		
+		Log.d(LocationUtils.APPTAG, "execute Provider " + mProvider + " action: " + action );
 
 		if (action.equals("clearWatch")) {
 			clearWatch(id);
