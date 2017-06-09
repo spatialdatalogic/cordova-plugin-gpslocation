@@ -53,6 +53,7 @@ public class CordovaGPSLocation extends CordovaPlugin {
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
 		mLocationManager = (LocationManager) cordova.getActivity().getSystemService(Context.LOCATION_SERVICE);
+		getListener();
 	}
 
 	/**
