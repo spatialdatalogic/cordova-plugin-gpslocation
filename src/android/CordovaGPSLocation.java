@@ -43,6 +43,7 @@ public class CordovaGPSLocation extends CordovaPlugin {
 	private CordovaLocationListener mListener;
 	private LocationManager mLocationManager;
 	private CordovaInterface mCordova;
+	private String mProvider = "gps";
 
     private final int GPS_PERMISSION_CODE = 1;
 
@@ -78,6 +79,7 @@ public class CordovaGPSLocation extends CordovaPlugin {
 		}
 
 		final String id = args.optString(0, "");
+		mProvider = args.optString(1,"");
 
 		if (action.equals("clearWatch")) {
 			clearWatch(id);
@@ -215,8 +217,12 @@ public class CordovaGPSLocation extends CordovaPlugin {
 			//cordova.getActivity().requestPermissions(new String[] {
 			//		Manifest.permission.ACCESS_FINE_LOCATION,
 			//		Manifest.permission.ACCESS_COARSE_LOCATION }, 1);
-
-			Location last = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			String provider = LocationManager.GPS_PROVIDER;
+			if (mProvider == "network") {	
+				provider = LocationManager.NETWORK_PROVIDER;	
+			}
+			
+			Location last = mLocationManager.getLastKnownLocation(provider);
 			// Check if we can use lastKnownLocation to get a quick reading and use
 			// less battery
 			if (last != null && (System.currentTimeMillis() - last.getTime()) <= maximumAge) {
