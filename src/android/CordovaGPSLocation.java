@@ -206,9 +206,9 @@ public class CordovaGPSLocation extends CordovaPlugin {
 		}
 
 		try {
-			cordova.getActivity().requestPermissions(new String[] {
-					Manifest.permission.ACCESS_FINE_LOCATION,
-					Manifest.permission.ACCESS_COARSE_LOCATION }, 1);
+			//cordova.getActivity().requestPermissions(new String[] {
+			//		Manifest.permission.ACCESS_FINE_LOCATION,
+			//		Manifest.permission.ACCESS_COARSE_LOCATION }, 1);
 
 			Location last = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 			// Check if we can use lastKnownLocation to get a quick reading and use
