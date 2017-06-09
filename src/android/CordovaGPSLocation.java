@@ -43,7 +43,7 @@ public class CordovaGPSLocation extends CordovaPlugin {
 	private CordovaLocationListener mListener;
 	private LocationManager mLocationManager;
 	private CordovaInterface mCordova;
-	private String mProvider = "gps";
+	private String mProvider = "network";
 
     private final int GPS_PERMISSION_CODE = 1;
 
@@ -217,19 +217,19 @@ public class CordovaGPSLocation extends CordovaPlugin {
 			//cordova.getActivity().requestPermissions(new String[] {
 			//		Manifest.permission.ACCESS_FINE_LOCATION,
 			//		Manifest.permission.ACCESS_COARSE_LOCATION }, 1);
-			String provider = LocationManager.GPS_PROVIDER;
-			if (mProvider == "network") {	
-				provider = LocationManager.NETWORK_PROVIDER;	
-			}
+			//String provider = LocationManager.GPS_PROVIDER;
+			//if (mProvider == "network") {	
+			//	provider = LocationManager.NETWORK_PROVIDER;	
+			//}
 			
-			Location last = mLocationManager.getLastKnownLocation(provider);
+			Location last = mLocationManager.getLastKnownLocation(mProvider);
 			// Check if we can use lastKnownLocation to get a quick reading and use
 			// less battery
 			if (last != null && (System.currentTimeMillis() - last.getTime()) <= maximumAge) {
 				PluginResult result = new PluginResult(PluginResult.Status.OK, returnLocationJSON(last));
 				callbackContext.sendPluginResult(result);
 			} else {
-				getCurrentLocation(callbackContext, Integer.MAX_VALUE, provider);
+				getCurrentLocation(callbackContext, Integer.MAX_VALUE);
 			}
 		} catch(SecurityException e) {
 			fail(6, e.getMessage(), callbackContext, true);
@@ -240,8 +240,8 @@ public class CordovaGPSLocation extends CordovaPlugin {
 		getListener().clearWatch(id);
 	}
 
-	private void getCurrentLocation(CallbackContext callbackContext, int timeout, String provider) {
-		getListener().addCallback(callbackContext, timeout, provider);
+	private void getCurrentLocation(CallbackContext callbackContext, int timeout) {
+		getListener().addCallback(callbackContext, timeout, mProvider);
 	}
 
 	private void addWatch(String timerId, CallbackContext callbackContext) {
